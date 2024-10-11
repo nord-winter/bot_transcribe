@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	speech "cloud.google.com/go/speech/apiv1"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"google.golang.org/api/option"
 	speechpb "google.golang.org/genproto/googleapis/cloud/speech/v1"
@@ -169,7 +170,7 @@ func transcribeWithWhisper(audioFilePath string) string {
 func transcribeWithGoogleSpeechToText(audioFilePath string) (string, error) {
 	// Настройка аутентификации с использованием ключей сервисного аккаунта
 	ctx := context.Background()
-	client, err := speech.NewClient(ctx, option.WithCredentialsFile("resonant-triode-438304-m6-c8ffd354bf8e.json"))
+	client, err := speech.NewClient(ctx, option.WithCredentialsFile(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")))
 	if err != nil {
 		return "", err
 	}
@@ -193,7 +194,7 @@ func transcribeWithGoogleSpeechToText(audioFilePath string) (string, error) {
 		Config: &speechpb.RecognitionConfig{
 			Encoding:        speechpb.RecognitionConfig_LINEAR16,
 			SampleRateHertz: 16000,
-			LanguageCode:    "en-US", // Укажите нужный язык
+			LanguageCode:    "th-TH",
 		},
 		Audio: &speechpb.RecognitionAudio{
 			AudioSource: &speechpb.RecognitionAudio_Content{Content: audioData},
